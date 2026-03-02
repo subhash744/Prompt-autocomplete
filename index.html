@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- ══ PRIMARY SEO ══ -->
+  <title>Prompt Autocomplete — Save & Reuse AI Prompts on ChatGPT, Claude, Gemini & Grok</title>
+  <meta name="description" content="Free Chrome extension to save, organize, and instantly reuse your best AI prompts on ChatGPT, Claude, Gemini, and Grok. Type once, reuse forever. No account required."/>
+  <meta name="keywords" content="prompt autocomplete, ChatGPT prompt saver, Claude prompt manager, AI prompt tool, prompt snippets chrome extension, reuse AI prompts, ChatGPT shortcuts, prompt library extension, Gemini prompt tool, Grok prompts"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="author" content="Prompt Autocomplete"/>
+  <link rel="canonical" href="https://yourusername.github.io/prompt-autocomplete/"/>
+
+  <!-- ══ OPEN GRAPH (Facebook, LinkedIn) ══ -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://yourusername.github.io/prompt-autocomplete/"/>
+  <meta property="og:title" content="Prompt Autocomplete — Save & Reuse AI Prompts on ChatGPT, Claude & Gemini"/>
+  <meta property="og:description" content="Stop retyping the same prompts. Save once, reuse instantly on ChatGPT, Claude, Gemini, and Grok. Free Chrome extension."/>
+  <meta property="og:image" content="https://yourusername.github.io/prompt-autocomplete/og-image.png"/>
+  <meta property="og:site_name" content="Prompt Autocomplete"/>
+  <meta property="og:locale" content="en_US"/>
+
+  <!-- ══ TWITTER CARD ══ -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Prompt Autocomplete — Save & Reuse AI Prompts"/>
+  <meta name="twitter:description" content="Stop retyping the same prompts. Save once, reuse instantly on ChatGPT, Claude, Gemini, and Grok."/>
+  <meta name="twitter:image" content="https://yourusername.github.io/prompt-autocomplete/og-image.png"/>
+
+  <!-- ══ SCHEMA.ORG STRUCTURED DATA ══ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Prompt Autocomplete",
+    "applicationCategory": "BrowserApplication",
+    "operatingSystem": "Chrome",
+    "description": "Save, organize, and instantly reuse your best AI prompts on ChatGPT, Claude, Gemini, and Grok. Free Chrome extension.",
+    "url": "https://yourusername.github.io/prompt-autocomplete/",
+    "downloadUrl": "https://chromewebstore.google.com/detail/YOUR_EXTENSION_ID",
+    "softwareVersion": "1.2.0",
+    "datePublished": "2026-03-01",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1"
+    },
+    "featureList": [
+      "Autocomplete as you type",
+      "Works on ChatGPT, Claude, Gemini, Grok",
+      "Site-specific prompts",
+      "Tag-based organization",
+      "Pin your best prompts",
+      "Import prompt packs",
+      "100% local - no data collection"
+    ],
+    "screenshot": "https://yourusername.github.io/prompt-autocomplete/screenshot1.png",
+    "privacyPolicy": "https://yourusername.github.io/prompt-autocomplete/privacy_policy.html"
+  }
+  </script>
+
+  <!-- ══ FAQ SCHEMA (helps Google show rich results) ══ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does Prompt Autocomplete work on ChatGPT?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Prompt Autocomplete works on ChatGPT (chat.openai.com and chatgpt.com), Claude (claude.ai), Gemini (gemini.google.com), and Grok (grok.com)." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data safe? Does it collect anything?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Your data never leaves your device. All prompts are stored locally using Chrome's storage API. We collect zero analytics, have no servers, and require no account." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Prompt Autocomplete free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, completely free. Save up to 25 prompts at no cost. No credit card, no account, no subscription." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I use saved prompts?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Just start typing in any AI chat box — matching prompts appear as suggestions instantly. Press Enter or click to insert. Use Ctrl+Space to browse all prompts, or type ;tag to filter by tag." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #0a0a0a; --muted: #6b7280; --border: #e5e7eb;
+      --green: #16a34a; --blue: #2563eb;
+      --chatgpt: #10a37f; --claude: #d97706; --gemini: #4285f4; --grok: #8b5cf6;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); background: #fff; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+    .nav-logo { font-weight: 700; font-size: 15px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--text); }
+    .nav-logo-icon { width: 28px; height: 28px; background: var(--text); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-cta { background: var(--text); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.15s; }
+    .nav-cta:hover { background: #333; }
+
+    /* HERO */
+    .hero { max-width: 1100px; margin: 0 auto; padding: 80px 24px 64px; text-align: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; margin-bottom: 28px; }
+    h1 { font-size: clamp(32px, 5vw, 56px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
+    h1 span { color: var(--green); }
+    .hero-sub { font-size: clamp(16px, 2vw, 20px); color: var(--muted); max-width: 560px; margin: 0 auto 36px; }
+    .hero-cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn-primary { background: var(--text); color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s, transform 0.1s; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    .btn-primary:hover { background: #222; transform: translateY(-1px); }
+    .btn-ghost { color: var(--muted); padding: 14px 24px; border-radius: 28px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); transition: border-color 0.15s, color 0.15s; }
+    .btn-ghost:hover { border-color: #9ca3af; color: var(--text); }
+
+    /* PLATFORM PILLS */
+    .platform-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 56px; }
+    .platform-pill { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; border: 1.5px solid; }
+    .pill-chatgpt { color: var(--chatgpt); border-color: var(--chatgpt); background: rgba(16,163,127,0.06); }
+    .pill-claude  { color: var(--claude);  border-color: var(--claude);  background: rgba(217,119,6,0.06); }
+    .pill-gemini  { color: var(--gemini);  border-color: var(--gemini);  background: rgba(66,133,244,0.06); }
+    .pill-grok    { color: var(--grok);    border-color: var(--grok);    background: rgba(139,92,246,0.06); }
+    .platform-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .dot-chatgpt { background: var(--chatgpt); }
+    .dot-claude  { background: var(--claude); }
+    .dot-gemini  { background: var(--gemini); }
+    .dot-grok    { background: var(--grok); }
+
+    /* FEATURES */
+    section { padding: 72px 24px; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); margin-bottom: 12px; }
+    h2 { font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; line-height: 1.15; }
+    .section-sub { font-size: 17px; color: var(--muted); max-width: 520px; margin-bottom: 56px; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .feature-card { padding: 28px; border: 1px solid var(--border); border-radius: 16px; transition: border-color 0.15s, box-shadow 0.15s; }
+    .feature-card:hover { border-color: #9ca3af; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .feature-icon { font-size: 28px; margin-bottom: 14px; }
+    .feature-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* PRIVACY SECTION */
+    .privacy-section { background: #f8fafc; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .privacy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    @media (max-width: 700px) { .privacy-grid { grid-template-columns: 1fr; } }
+    .privacy-points { display: flex; flex-direction: column; gap: 16px; }
+    .privacy-point { display: flex; align-items: flex-start; gap: 12px; }
+    .privacy-check { width: 22px; height: 22px; background: #f0fdf4; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 12px; }
+    .privacy-point-text strong { display: block; font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .privacy-point-text span { font-size: 13px; color: var(--muted); }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 0; max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .faq-q { font-size: 16px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.01em; }
+    .faq-a { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+    /* CTA BOTTOM */
+    .cta-section { background: var(--text); color: #fff; text-align: center; }
+    .cta-section h2 { color: #fff; }
+    .cta-section .section-label { color: #9ca3af; }
+    .cta-section .section-sub { color: rgba(255,255,255,0.6); }
+    .btn-white { background: #fff; color: var(--text); padding: 14px 28px; border-radius: 28px; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.2); transition: transform 0.1s; }
+    .btn-white:hover { transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer { padding: 32px 24px; border-top: 1px solid var(--border); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      Prompt Autocomplete
+    </a>
+    <a href="https://chromewebstore.google.com/detail/YOUR_EXTENSION_ID" class="nav-cta" rel="noopener">Add to Chrome — Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    Free Chrome Extension
+  </div>
+  <h1>Stop Retyping the Same<br/><span>AI Prompts</span> Every Day</h1>
+  <p class="hero-sub">Save your best prompts once. Get instant autocomplete suggestions as you type on ChatGPT, Claude, Gemini, and Grok.</p>
+  <div class="hero-cta-group">
+    <a href="https://chromewebstore.google.com/detail/YOUR_EXTENSION_ID" class="btn-primary" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Add to Chrome — It's Free
+    </a>
+    <a href="#features" class="btn-ghost">See how it works</a>
+  </div>
+  <div class="platform-pills">
+    <div class="platform-pill pill-chatgpt"><span class="platform-dot dot-chatgpt"></span>ChatGPT</div>
+    <div class="platform-pill pill-claude"><span class="platform-dot dot-claude"></span>Claude</div>
+    <div class="platform-pill pill-gemini"><span class="platform-dot dot-gemini"></span>Gemini</div>
+    <div class="platform-pill pill-grok"><span class="platform-dot dot-grok"></span>Grok</div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" style="background:#f8fafc; border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <h2>Everything you need to<br/>prompt faster</h2>
+    <p class="section-sub">Built for people who use AI tools every day and are tired of retyping the same prompts.</p>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Autocomplete as you type</div>
+        <div class="feature-desc">Matching prompt suggestions appear the moment you start typing. One click or Enter to insert the full prompt.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">4 platforms, one extension</div>
+        <div class="feature-desc">Works on ChatGPT, Claude, Gemini, and Grok. Your prompts sync across all platforms automatically.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Site-specific prompts</div>
+        <div class="feature-desc">Assign prompts to specific AI platforms. Your coding prompts only show on ChatGPT, writing prompts only on Claude.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏷️</div>
+        <div class="feature-title">Tag-based organization</div>
+        <div class="feature-desc">Tag your prompts and type <strong>;tagname</strong> to instantly filter. Keep hundreds of prompts organized effortlessly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📌</div>
+        <div class="feature-title">Pin your best prompts</div>
+        <div class="feature-desc">Pin up to 3 prompts so they always appear first. Press Ctrl+Space to browse pinned and most-used prompts instantly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Ready-made prompt packs</div>
+        <div class="feature-desc">Import curated packs for founders, developers, content writers, and marketers. Start with 20+ proven prompts instantly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy-section" id="privacy">
+  <div class="section-inner">
+    <div class="privacy-grid">
+      <div>
+        <div class="section-label">Privacy</div>
+        <h2>Your prompts are<br/>yours. Always.</h2>
+        <p style="color:var(--muted);font-size:16px;margin-bottom:24px;">We built this with a simple rule: never touch user data. Not even if we wanted to — there are no servers to send it to.</p>
+        <a href="privacy_policy.html" style="font-size:14px;color:var(--blue);font-weight:600;text-decoration:none;">Read full privacy policy →</a>
+      </div>
+      <div class="privacy-points">
+        <div class="privacy-point">
+          <div class="privacy-check">🔒</div>
+          <div class="privacy-point-text"><strong>100% local storage</strong><span>Prompts stored on your device using Chrome's built-in storage API. Never leaves your browser.</span></div>
+        </div>
+        <div class="privacy-point">
+          <div class="privacy-check">🚫</div>
+          <div class="privacy-point-text"><strong>Zero data collection</strong><span>No analytics, no crash reports, no usage tracking. We literally cannot see your data.</span></div>
+        </div>
+        <div class="privacy-point">
+          <div class="privacy-check">🏗️</div>
+          <div class="privacy-point-text"><strong>No account required</strong><span>Install and use immediately. No email, no sign-up, no subscription.</span></div>
+        </div>
+        <div class="privacy-point">
+          <div class="privacy-check">🔍</div>
+          <div class="privacy-point-text"><strong>No external requests</strong><span>The extension makes zero network requests. All code runs locally in your browser.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-inner" style="text-align:center;">
+    <div class="section-label">FAQ</div>
+    <h2>Common questions</h2>
+    <p class="section-sub" style="margin:0 auto 48px;">Everything you need to know before installing.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Which AI platforms does it work on?</div>
+        <div class="faq-a">ChatGPT (chat.openai.com and chatgpt.com), Claude (claude.ai), Gemini (gemini.google.com), and Grok (grok.com). Works on all 4 with the same saved prompts.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is my data safe? Does it collect anything?</div>
+        <div class="faq-a">Your data never leaves your device. Everything is stored locally using Chrome's storage API. There are no servers, no analytics, no tracking of any kind.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is it really free?</div>
+        <div class="faq-a">Yes. Save up to 25 prompts completely free. No credit card, no account, no subscription. Just install and use.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I trigger autocomplete?</div>
+        <div class="faq-a">Just start typing in any AI chat box — suggestions appear automatically. Press Ctrl+Space to browse all prompts. Type ;tagname to filter by tag.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I use different prompts on different AI tools?</div>
+        <div class="faq-a">Yes. When saving a prompt, select which platforms it should appear on — or leave it as "All Sites" to show everywhere.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens to my prompts if I uninstall?</div>
+        <div class="faq-a">They are deleted along with the extension's local storage. We recommend exporting your prompts as JSON before uninstalling.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="cta-section">
+  <div class="section-inner" style="text-align:center;">
+    <div class="section-label">Get started</div>
+    <h2>Add it to Chrome.<br/>Start saving prompts in 60 seconds.</h2>
+    <p class="section-sub" style="margin:0 auto 36px;">Free. No account. Works immediately on ChatGPT, Claude, Gemini & Grok.</p>
+    <a href="https://chromewebstore.google.com/detail/YOUR_EXTENSION_ID" class="btn-white" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Add to Chrome — Free
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Prompt Autocomplete</span>
+    <div class="footer-links">
+      <a href="privacy_policy.html">Privacy Policy</a>
+      <a href="https://chromewebstore.google.com/detail/YOUR_EXTENSION_ID" rel="noopener">Chrome Web Store</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
