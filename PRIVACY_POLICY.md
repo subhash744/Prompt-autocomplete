@@ -26,7 +26,7 @@ storage — Saves your prompts locally on your device. No data leaves your devic
 
 Host access to 20 URLs across 16 AI platforms — Injects the autocomplete UI into prompt input fields only. The content script reads only the current value of the prompt input to match against your saved prompts, and writes the selected prompt back into that same input when you click a suggestion. No other page content is read, stored, or transmitted.
 
-Supported platforms: ChatGPT, Claude, Gemini, Grok, Microsoft Copilot, DeepSeek, Perplexity, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, StackBlitz, Cursor, Emergent, v0.
+Supported platforms: ChatGPT, Claude, Gemini, Grok, Microsoft Copilot, DeepSeek, Perplexity, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, StackBlitz, Anything, Rork, Emergent, v0.
 
 5. Feedback Forms
 The extension includes optional links to two external Tally.so forms — one for general feedback and one that opens automatically when you uninstall. These forms are completely optional. If you choose to submit a response, your answers are governed by Tally's own privacy policy. We do not link form responses to any personal identity. No data is collected from these forms automatically — only if you voluntarily fill them out and submit.
