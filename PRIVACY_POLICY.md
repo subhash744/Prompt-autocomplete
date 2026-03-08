@@ -3,7 +3,7 @@ Prompt Autocomplete Chrome Extension  ·  Last updated: March 2026
 🔒 Short version: We collect zero data. Everything you save stays on your device only. No servers, no accounts, no tracking.
 
 1. Who We Are
-Prompt Autocomplete is a Chrome browser extension that helps you save, organize, and reuse prompts on AI platforms including ChatGPT, Claude, Gemini, Grok, DeepSeek, Perplexity, Microsoft Copilot, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, Cursor, Emergent, v0, and StackBlitz. The extension is an independent product and is not affiliated with OpenAI, Anthropic, Google, xAI, Microsoft, or any other AI company.
+Prompt Autocomplete is a Chrome browser extension that helps you save, organize, and reuse prompts on AI platforms including ChatGPT, Claude, Gemini, Grok, DeepSeek, Perplexity, Microsoft Copilot, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, Anything, Rork, Emergent, v0, and StackBlitz. The extension is an independent product and is not affiliated with OpenAI, Anthropic, Google, xAI, Microsoft, or any other AI company.
 
 2. Data We Collect
 We collect absolutely no personal data. The extension does not collect, transmit, store remotely, or share any information about you or your activity. Specifically, we do not collect:
