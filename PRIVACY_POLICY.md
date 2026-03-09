@@ -3,13 +3,13 @@ Prompt Autocomplete Chrome Extension  ·  Last updated: March 2026
 🔒 Short version: We collect zero data. Everything you save stays on your device only. No servers, no accounts, no tracking.
 
 1. Who We Are
-Prompt Autocomplete is a Chrome browser extension that helps you save, organize, and reuse prompts on AI platforms including ChatGPT, Claude, Gemini, Grok, DeepSeek, Perplexity, Microsoft Copilot, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, Anything, Rork, Emergent, v0, and StackBlitz. The extension is an independent product and is not affiliated with OpenAI, Anthropic, Google, xAI, Microsoft, or any other AI company.
+Prompt Autocomplete is a Chrome browser extension that helps you save, organize, and reuse prompts across AI platforms. The extension is an independent product and is not affiliated with any AI company.
 
 2. Data We Collect
 We collect absolutely no personal data. The extension does not collect, transmit, store remotely, or share any information about you or your activity. Specifically, we do not collect:
 - Your name, email address, or any account information
 - The prompts you save or type
-- Your browsing history or activity on any AI platform
+- Your browsing history or activity on any platform
 - Usage statistics, analytics, or crash reports
 - IP addresses or device identifiers
 - Any form of personally identifiable information
@@ -24,9 +24,7 @@ All data created by the extension — including your saved prompts, tags, site a
 4. Permissions We Request and Why
 storage — Saves your prompts locally on your device. No data leaves your device.
 
-Host access to 20 URLs across 16 AI platforms — Injects the autocomplete UI into prompt input fields only. The content script reads only the current value of the prompt input to match against your saved prompts, and writes the selected prompt back into that same input when you click a suggestion. No other page content is read, stored, or transmitted.
-
-Supported platforms: ChatGPT, Claude, Gemini, Grok, Microsoft Copilot, DeepSeek, Perplexity, Meta AI, Mistral, Google AI Studio, NotebookLM, Lovable, Bolt, StackBlitz, Anything, Rork, Emergent, v0.
+Host permissions — Required to inject the autocomplete UI into prompt input fields on supported AI platforms. The content script reads only the current value of the prompt input field to match against your saved prompts, and writes the selected prompt back into that same input when you click a suggestion. No other page content is read, stored, or transmitted. No AI responses are accessed. No user activity outside the prompt input is monitored.
 
 5. Feedback Forms
 The extension includes optional links to two external Tally.so forms — one for general feedback and one that opens automatically when you uninstall. These forms are completely optional. If you choose to submit a response, your answers are governed by Tally's own privacy policy. We do not link form responses to any personal identity. No data is collected from these forms automatically — only if you voluntarily fill them out and submit.
