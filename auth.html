@@ -4,122 +4,90 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Activating Pro — Prompt Autocomplete</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #faf9f7;
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-    }
-    .card {
-      max-width: 420px; width: 100%;
-      background: #fff; border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 20px; padding: 48px 40px;
-      text-align: center;
-      box-shadow: 0 4px 40px rgba(0,0,0,0.06);
-    }
-    .icon {
-      width: 64px; height: 64px; border-radius: 16px;
-      background: #0d0d0d; display: flex; align-items: center;
-      justify-content: center; margin: 0 auto 24px;
-    }
-    .status { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-    .desc { font-size: 14px; color: #6b6560; line-height: 1.65; margin-bottom: 28px; }
-    .spinner {
-      width: 28px; height: 28px; border: 2.5px solid rgba(0,0,0,0.08);
-      border-top-color: #0d0d0d; border-radius: 50%;
-      animation: spin 0.8s linear infinite; margin: 0 auto 20px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: #faf9f7; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .card { max-width: 400px; width: 100%; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 20px; padding: 48px 36px; text-align: center; box-shadow: 0 4px 40px rgba(0,0,0,0.06); }
+    .logo { width: 56px; height: 56px; background: #0d0d0d; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .spinner { width: 28px; height: 28px; border: 2.5px solid rgba(0,0,0,0.08); border-top-color: #0d0d0d; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .success-icon { font-size: 40px; margin-bottom: 16px; }
-    .error-icon { font-size: 40px; margin-bottom: 16px; }
-    .btn {
-      display: inline-block; padding: 12px 28px;
-      background: #0d0d0d; color: #fff; border-radius: 100px;
-      font-size: 14px; font-weight: 600; text-decoration: none;
-      transition: background 0.15s;
-    }
-    .btn:hover { background: #222; }
-    .btn-outline {
-      background: transparent; color: #0d0d0d;
-      border: 1.5px solid rgba(0,0,0,0.12); margin-top: 10px;
-    }
-    .btn-outline:hover { background: rgba(0,0,0,0.04); }
+    .title { font-size: 20px; font-weight: 700; color: #0d0d0d; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .desc { font-size: 13.5px; color: #6b6560; line-height: 1.65; margin-bottom: 24px; }
+    .btn { display: inline-block; padding: 11px 28px; background: #0d0d0d; color: #fff; border-radius: 100px; font-size: 13.5px; font-weight: 600; text-decoration: none; }
     #state-loading, #state-success, #state-error { display: none; }
     #state-loading.active, #state-success.active, #state-error.active { display: block; }
   </style>
 </head>
 <body>
 <div class="card">
-  <div class="icon">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="9 11 12 14 22 4"/>
       <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
     </svg>
   </div>
 
-  <!-- Loading -->
   <div id="state-loading" class="active">
     <div class="spinner"></div>
-    <div class="status">Activating Pro…</div>
-    <p class="desc">Verifying your account. This takes just a second.</p>
+    <div class="title">Activating Pro…</div>
+    <p class="desc">Verifying your account. Just a second.</p>
   </div>
 
-  <!-- Success -->
   <div id="state-success">
-    <div class="success-icon">✅</div>
-    <div class="status">Pro Activated!</div>
-    <p class="desc">Your account is ready. Open the Prompt Autocomplete extension, click "Sign in", enter your email and you're good to go.<br/><br/>Your prompts will sync across all your devices automatically.</p>
-    <a href="/" class="btn" style="margin-top:4px;">Back to Home</a>
+    <div style="font-size:40px;margin-bottom:16px">✅</div>
+    <div class="title">Pro Activated!</div>
+    <p class="desc">
+      Your account is ready.<br/><br/>
+      Open the <strong>Prompt Autocomplete</strong> extension,
+      click <strong>"Already paid? Activate Pro"</strong>,
+      enter your email, and you're done.<br/><br/>
+      Your prompts will sync across all your devices automatically.
+    </p>
+    <a href="/" class="btn">Back to Home</a>
   </div>
 
-  <!-- Error -->
   <div id="state-error">
-    <div class="error-icon">⚠️</div>
-    <div class="status">Something went wrong</div>
-    <p class="desc" id="error-msg">The activation link may have expired. Please try signing in again from the extension.</p>
-    <a href="/" class="btn">Back to Home</a><br/>
-    <a href="mailto:support@promptautocomplete.com" class="btn btn-outline">Contact Support</a>
+    <div style="font-size:40px;margin-bottom:16px">⚠️</div>
+    <div class="title">Link expired</div>
+    <p class="desc" id="error-msg">This activation link has expired or already been used. Open the extension and request a new sign-in link.</p>
+    <a href="/" class="btn">Back to Home</a>
   </div>
 </div>
 
 <script>
-  // Supabase handles the magic link token in the URL hash automatically.
-  // This page just needs to show the right state.
-
-  function showState(name) {
-    document.querySelectorAll('[id^="state-"]').forEach(function(el) {
-      el.classList.remove('active');
+  function show(id) {
+    ['loading','success','error'].forEach(function(s) {
+      document.getElementById('state-' + s).classList.remove('active');
     });
-    document.getElementById('state-' + name).classList.add('active');
+    document.getElementById('state-' + id).classList.add('active');
   }
 
   function init() {
-    var hash = window.location.hash;
-    var params = new URLSearchParams(window.location.search);
+    var hash   = window.location.hash || '';
+    var search = window.location.search || '';
+    var params = new URLSearchParams(search);
 
-    // Check for error in URL
+    // Error from Supabase
     if (params.get('error') || hash.includes('error=')) {
-      var errDesc = params.get('error_description') || 'Activation link expired or already used.';
-      document.getElementById('error-msg').textContent = errDesc + ' Please try signing in again from the extension.';
-      showState('error');
+      var desc = params.get('error_description') || 'Link expired or already used.';
+      document.getElementById('error-msg').textContent = desc + ' Open the extension and try again.';
+      show('error');
       return;
     }
 
-    // Check for access_token (successful magic link)
-    if (hash.includes('access_token=') || params.get('access_token')) {
-      // Token is in the URL — Supabase JS SDK would normally handle this
-      // For now just show success since the extension will pick up the session
-      setTimeout(function() { showState('success'); }, 1200);
+    // Success — access_token present in hash
+    if (hash.includes('access_token=')) {
+      setTimeout(function() {
+        show('success');
+        // Auto close after 4s if opened from extension
+        setTimeout(function() { window.close(); }, 4000);
+      }, 800);
       return;
     }
 
-    // No token — probably direct visit
-    showState('success');
+    // Direct visit with no token
+    show('success');
   }
 
   init();
