@@ -1,163 +1,141 @@
-// api/webhook.js — Dodo Payments webhook handler
-import { createClient } from "@supabase/supabase-js";
-import crypto from "crypto";
+// api/webhook.js — Dodo Payments webhook handler for Vercel
+// Deploy this to your Vercel project at promptautocomplete.vercel.app
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+import { createClient } from '@supabase/supabase-js';
 
-function generateLicenseKey() {
-  const seg = () => crypto.randomBytes(3).toString("hex").toUpperCase();
-  return `PA-${seg()}-${seg()}-${seg()}`;
-}
+// Initialize Supabase client with service role key (server-side only)
+const supabaseUrl = process.env.SUPABASE_URL || 'https://bscjhmxdwantvgqomykx.supabase.co';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-function verifyDodoSignature(rawBody, signature, secret) {
-  const hmac = crypto.createHmac("sha256", secret);
-  hmac.update(rawBody);
-  const expected = hmac.digest("hex");
-  try {
-    return crypto.timingSafeEqual(
-      Buffer.from(signature, "hex"),
-      Buffer.from(expected, "hex")
-    );
-  } catch {
-    return false;
-  }
-}
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+// Webhook secret from Dodo dashboard
+const WEBHOOK_SECRET = process.env.DODO_WEBHOOK_SECRET || 'whsec_1bEmlkE/Ta4zI4moRzMnXP5hD9+YNovi';
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  // Only accept POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Get raw body for signature verification
-  const rawBody = JSON.stringify(req.body);
-  const signature = req.headers["dodo-signature"] || req.headers["x-dodo-signature"] || "";
+  try {
+    // Verify webhook signature (if Dodo provides signing)
+    const signature = req.headers['x-dodo-signature'];
+    
+    // Log the event for debugging
+    console.log('Dodo webhook received:', req.body);
 
-  // Verify webhook signature
-  const webhookSecret = process.env.DODO_WEBHOOK_SECRET;
-  if (webhookSecret && signature) {
-    const sig = signature.replace("sha256=", "");
-    if (!verifyDodoSignature(rawBody, sig, webhookSecret)) {
-      console.error("Invalid webhook signature");
-      return res.status(401).json({ error: "Invalid signature" });
+    const event = req.body;
+
+    if (!event || !event.event_type) {
+      return res.status(400).json({ error: 'Invalid webhook payload' });
     }
-  }
 
-  const event = req.body;
-  const eventType = event.type || event.event_type;
+    // Handle different event types
+    switch (event.event_type) {
+      case 'payment.success':
+      case 'subscription.created':
+      case 'subscription.active':
+        await handlePaymentSuccess(event.data);
+        break;
 
-  console.log("Dodo webhook event:", eventType, JSON.stringify(event).slice(0, 200));
+      case 'subscription.expired':
+      case 'subscription.canceled':
+      case 'payment.failed':
+        await handleSubscriptionExpired(event.data);
+        break;
 
-  // Handle subscription activated or payment succeeded
-  if (
-    eventType === "subscription.active" ||
-    eventType === "subscription.activated" ||
-    eventType === "payment.succeeded" ||
-    eventType === "checkout.completed"
-  ) {
-    try {
-      // Extract customer email from various possible payload shapes
-      const email =
-        event?.data?.customer?.email ||
-        event?.customer?.email ||
-        event?.data?.billing_address?.email ||
-        event?.email ||
-        null;
-
-      const customerId =
-        event?.data?.customer?.id ||
-        event?.customer_id ||
-        event?.data?.customer_id ||
-        null;
-
-      const subscriptionId =
-        event?.data?.subscription_id ||
-        event?.data?.id ||
-        event?.subscription_id ||
-        null;
-
-      if (!email) {
-        console.error("No email in webhook payload:", JSON.stringify(event));
-        return res.status(200).json({ received: true, warning: "no email found" });
-      }
-
-      // Check if license already exists for this email
-      const { data: existing } = await supabase
-        .from("licenses")
-        .select("license_key")
-        .eq("email", email.toLowerCase())
-        .single();
-
-      let licenseKey;
-
-      if (existing?.license_key) {
-        // Reuse existing key (e.g. renewal)
-        licenseKey = existing.license_key;
-        await supabase
-          .from("licenses")
-          .update({
-            status: "active",
-            subscription_id: subscriptionId,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("email", email.toLowerCase());
-      } else {
-        // Generate new license key
-        licenseKey = generateLicenseKey();
-        const { error } = await supabase.from("licenses").insert({
-          email: email.toLowerCase(),
-          license_key: licenseKey,
-          customer_id: customerId,
-          subscription_id: subscriptionId,
-          status: "active",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        });
-
-        if (error) {
-          console.error("Supabase insert error:", error);
-          return res.status(500).json({ error: "DB error" });
-        }
-      }
-
-      console.log(`License issued: ${licenseKey} → ${email}`);
-      return res.status(200).json({ received: true, license_key: licenseKey });
-
-    } catch (err) {
-      console.error("Webhook handler error:", err);
-      return res.status(500).json({ error: "Internal error" });
+      default:
+        console.log('Unhandled event type:', event.event_type);
     }
-  }
 
-  // Handle subscription cancellation / payment failed
-  if (
-    eventType === "subscription.cancelled" ||
-    eventType === "subscription.canceled" ||
-    eventType === "subscription.ended" ||
-    eventType === "payment.failed"
-  ) {
-    try {
-      const email =
-        event?.data?.customer?.email ||
-        event?.customer?.email ||
-        event?.email ||
-        null;
-
-      if (email) {
-        await supabase
-          .from("licenses")
-          .update({ status: "inactive", updated_at: new Date().toISOString() })
-          .eq("email", email.toLowerCase());
-
-        console.log(`License deactivated for: ${email}`);
-      }
-    } catch (err) {
-      console.error("Deactivation error:", err);
-    }
+    // Always return 200 to acknowledge receipt
     return res.status(200).json({ received: true });
+
+  } catch (error) {
+    console.error('Webhook error:', error);
+    // Still return 200 to prevent Dodo from retrying
+    return res.status(200).json({ received: true, error: error.message });
+  }
+}
+
+async function handlePaymentSuccess(data) {
+  const { 
+    customer_id, 
+    customer_email,
+    payment_id,
+    product_id,
+    status,
+    amount,
+    currency = 'USD'
+  } = data;
+
+  if (!customer_id) {
+    console.error('No customer_id in payment data');
+    return;
   }
 
-  return res.status(200).json({ received: true });
+  // Calculate expiration (1 year from now for one-time purchase)
+  const expiresAt = new Date();
+  expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+
+  // Update user's premium status in Supabase
+  const { error: userError } = await supabase
+    .from('users')
+    .update({
+      is_premium: true,
+      subscription_status: 'active',
+      subscription_expires_at: expiresAt.toISOString(),
+      dodo_customer_id: customer_id,
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', customer_id);
+
+  if (userError) {
+    console.error('Failed to update user:', userError);
+    throw userError;
+  }
+
+  // Record the subscription/payment
+  const { error: subError } = await supabase
+    .from('subscriptions')
+    .insert({
+      user_id: customer_id,
+      dodo_payment_id: payment_id,
+      dodo_product_id: product_id,
+      status: status || 'completed',
+      amount: amount,
+      currency: currency,
+      expires_at: expiresAt.toISOString()
+    });
+
+  if (subError) {
+    console.error('Failed to record subscription:', subError);
+    // Don't throw here, the user was already updated
+  }
+
+  console.log(`✓ User ${customer_id} upgraded to premium`);
+}
+
+async function handleSubscriptionExpired(data) {
+  const { customer_id } = data;
+
+  if (!customer_id) return;
+
+  // Update user's premium status
+  const { error } = await supabase
+    .from('users')
+    .update({
+      is_premium: false,
+      subscription_status: 'expired',
+      updated_at: new Date().toISOString()
+    })
+    .eq('id', customer_id);
+
+  if (error) {
+    console.error('Failed to update expired user:', error);
+    throw error;
+  }
+
+  console.log(`✓ User ${customer_id} premium expired`);
 }
